@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      #bgHeader {
+        background-color: rgb(10, 182, 240);
+      }
+      #bgButton {
+        background-color: rgb(14, 105, 184);
+      }
+      button {
+        background-color: rgb(14, 105, 184);
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1 v-if="(info) != null">{{info}}</h1>
+      <table style="width: 100%">
+        <tr id="bgHeader">
+          <th v-for="(header, i) in headers" :key="i">{{header}}</th>
+        </tr>
+        <tr v-for="(info, i) in infos" :key="i">
+          <th>{{info.id}}</th>
+          <th>{{info.name}}</th>
+          <th>{{info.class}}</th>
+          <th>{{info.math}}</th>
+          <th>{{info.literature}}</th>
+          <th>{{info.english}}</th>
+          <th id="bgButton">
+            <button @click="goToUpdatePage()">{{info.button}}</button>
+          </th>
+        </tr>
+      </table>
+    </div>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+      id = 0;
+      let app = Vue.createApp({
+        data() {
+          return {
+            headers: [
+              "ID",
+              "Name",
+              "Class",
+              "Math",
+              "Literature",
+              "English",
+              "Button",
+            ],
+            infos: [
+              {
+                id: ++id,
+                name: "A",
+                class: "11A",
+                math: 10,
+                literature: 10,
+                english: 10,
+                button: "Edit",
+              },
+              {
+                id: ++id,
+                name: "B",
+                class: "11B",
+                math: 10,
+                literature: 10,
+                english: 10,
+                button: "Edit",
+              },
+            ],
+            info: null,
+          };
+        },
+        methods: {
+          async fetchData() {
+            this.info = null;
+            const res = await fetch(`http://localhost:8080/api/student/336`);
+            this.info = await res.json();
+          },
+          goToUpdatePage() {
+            this.$router.push("/update.html");
+          },
+        },
+        mounted() {
+          this.fetchData();
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
